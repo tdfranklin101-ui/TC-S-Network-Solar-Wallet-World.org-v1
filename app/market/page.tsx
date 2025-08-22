@@ -1,0 +1,1 @@
+export default function Market(){ return (<main><h1>Market</h1><p>Market UI placeholder</p></main>) }

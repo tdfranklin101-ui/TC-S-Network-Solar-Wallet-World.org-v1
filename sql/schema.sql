@@ -1,0 +1,1 @@
+create table if not exists tcs_balances(wallet text primary key, rays bigint);
