@@ -1,3 +1,35 @@
+// app/market/page.tsx
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+import { createClient } from "@supabase/supabase-js";
+
+export default async function MarketPage() {
+  const supabase = createClient(
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_KEY!
+  );
+
+  const { data: items, error } = await supabase.from("tcs_items").select("*");
+
+  if (error) {
+    console.error(error);
+    return <div>Failed to load market items</div>;
+  }
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Market</h1>
+      <ul className="space-y-2">
+        {items?.map((item) => (
+          <li key={item.id} className="border p-2 rounded">
+            {item.name} – {item.price} Rays
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 export const dynamic = "force-dynamic";
 export const fetchCache = "force-no-store";
 
