@@ -1,3 +1,5 @@
+import "./globals.css";
+
 export const metadata = { title: "TC-S World Mini", description: "Solar Wallet + Market" };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

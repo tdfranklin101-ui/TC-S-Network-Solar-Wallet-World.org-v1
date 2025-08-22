@@ -1,13 +1,18 @@
 export const dynamic = "force-dynamic";
+export const fetchCache = "force-no-store";
 
-async function getItems() {
-  const base = process.env.NEXT_PUBLIC_VERCEL_URL ? "https://" + process.env.NEXT_PUBLIC_VERCEL_URL : "";
-  const res = await fetch(`${base}/api/market/list`, { cache: "no-store" });
-  try { return res.ok ? await res.json() : { items: [] }; } catch { return { items: [] }; }
-}
+import { supabase } from "@/lib/supabase";
 
 export default async function MarketPage() {
-  const { items } = await getItems();
+  const { data, error } = await supabase
+    .from("tcs_items")
+    .select("id,title,description,rays_price")
+    .eq("status","active")
+    .order("created_at",{ ascending:false })
+    .limit(24);
+
+  const items = data ?? [];
+
   return (
     <div className="grid gap-6">
       <h1 className="text-xl font-semibold">Market</h1>
