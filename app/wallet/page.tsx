@@ -1,40 +1,24 @@
-"use client";
-import { useEffect, useState } from "react";
+'use client';
+import { useEffect, useState } from 'react';
+import { kwhToRays, kwhToSolar, fmtRays, fmtSolar, ONE_SOLAR_KWH } from '@/lib/units';
 
-export default function WalletPage() {
-  const [wallet, setWallet] = useState("");
-  const [balance, setBalance] = useState<number | null>(null);
-  const [loading, setLoading] = useState(false);
+export default function Wallet() {
+  const [kwh,setKwh] = useState(0); const [msg,setMsg] = useState<string>();
 
-  const fetchBalance = async (w: string) => {
-    setLoading(true);
-    const res = await fetch(`/api/wallet/balance?wallet=${encodeURIComponent(w)}`);
-    const json = await res.json();
-    setBalance(json.rays ?? 0);
-    setLoading(false);
-  };
+  const load = async()=>{ const r = await fetch('/api/wallet/balance'); const j = await r.json(); setKwh(j.kwh||0); };
+  useEffect(()=>{ load(); },[]);
 
-  useEffect(() => {
-    const url = new URL(window.location.href);
-    const w = url.searchParams.get("wallet") ?? "";
-    if (w) { setWallet(w); fetchBalance(w); }
-  }, []);
+  const daily = async()=>{ const r = await fetch('/api/wallet/daily',{method:'POST'}); const j = await r.json(); setMsg(j.granted?'Granted +1 Solar':'Already claimed'); load(); };
 
   return (
-    <div className="grid gap-6">
-      <h1 className="text-xl font-semibold">Wallet</h1>
-      <div className="flex gap-2">
-        <input value={wallet} onChange={(e)=>setWallet(e.target.value)}
-               placeholder="wallet id (e.g., wallet_demo_123)"
-               className="border rounded px-3 py-2 w-full"/>
-        <button onClick={()=>wallet && fetchBalance(wallet)} className="rounded bg-sky-600 text-white px-4 py-2">Load</button>
+    <div className="max-w-xl space-y-4">
+      <div className="p-3 border rounded">
+        <div className="text-sm opacity-70">Balance</div>
+        <div className="text-lg">{fmtRays(kwhToRays(kwh))} Rays</div>
+        <div className="text-sm opacity-70">{fmtSolar(kwhToSolar(kwh))} Solar</div>
       </div>
-      <div className="rounded border bg-white p-4">
-        {loading ? "Loading…" : balance !== null ? (
-          <div><div className="text-sm text-gray-500">Rays balance</div>
-          <div className="text-3xl font-semibold">{balance.toLocaleString()}</div></div>
-        ) : "Enter a wallet and click Load"}
-      </div>
+      <button onClick={daily} className="px-4 py-2 bg-emerald-600 text-white rounded">Claim +1 Solar</button>
+      {msg && <div className="text-sm opacity-70">{msg}</div>}
     </div>
   );
 }
