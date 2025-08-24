@@ -1,5 +1,13 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  }
+}
+{
+  "compilerOptions": {
     "target": "ES2022",
     "lib": [
       "dom",
