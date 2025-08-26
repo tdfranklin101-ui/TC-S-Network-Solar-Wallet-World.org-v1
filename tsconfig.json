@@ -11,12 +11,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
-
     "baseUrl": ".",
-    "paths": {
-      "@/*": ["./*"]
-    },
-
+    "paths": { "@/*": ["./*"] },
     "types": ["node"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
