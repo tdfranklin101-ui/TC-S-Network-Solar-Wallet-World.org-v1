@@ -4,7 +4,7 @@ import { getOrCreateWalletId } from '@/lib/wallet-id';
 
 export const runtime = 'nodejs';
 
-export async function GET() {
+export default async function GET() {
   const wallet = getOrCreateWalletId();
   const sb = supabaseService();
 
@@ -15,12 +15,9 @@ export async function GET() {
     .single();
 
   if (error) {
-    console.error(error);
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    // still return 0 so the UI doesn't break
+    return NextResponse.json({ wallet, kwh: 0, error: error.message }, { status: 200 });
   }
 
-  return NextResponse.json({
-    wallet,
-    kwh: data?.kwh ?? 0,
-  });
+  return NextResponse.json({ wallet, kwh: data?.kwh ?? 0 });
 }
