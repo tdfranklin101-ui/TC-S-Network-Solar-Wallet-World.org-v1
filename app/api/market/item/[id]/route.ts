@@ -1,15 +1,15 @@
-iimport { NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { supabaseService } from '@/lib/supabase-server';
 
 export const runtime = 'nodejs';
 
 export async function GET(
-  request: Request,
-  context: { params: { id: string } }
+  _req: Request,
+  { params }: { params: { id: string } }
 ) {
-  const { id } = context.params;
-  const sb = supabaseService();
+  const { id } = params;
 
+  const sb = supabaseService();
   const { data, error } = await sb
     .from('tcs_items')
     .select('*')
@@ -22,3 +22,4 @@ export async function GET(
 
   return NextResponse.json({ item: data });
 }
+
