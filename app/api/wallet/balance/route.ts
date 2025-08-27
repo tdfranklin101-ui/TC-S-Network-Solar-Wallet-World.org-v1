@@ -12,14 +12,15 @@ export async function GET() {
     .from('tcs_balances')
     .select('kwh')
     .eq('wallet_id', wallet)
-    .single();   // <-- guarantees one row, not an array
+    .single();
 
   if (error) {
+    console.error(error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 
   return NextResponse.json({
-    walletId: wallet,
+    wallet,
     kwh: data?.kwh ?? 0,
   });
 }
