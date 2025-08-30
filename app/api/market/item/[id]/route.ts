@@ -1,18 +1,15 @@
 // app/api/market/item/[id]/route.ts
 import { NextResponse } from 'next/server';
 
-type Params = { id: string };
-
 export async function GET(
-  _request: Request,
-  { params }: { params: Params }
+  _req: Request,
+  { params }: { params: { id: string } } // 👈 inline the exact shape
 ) {
   const { id } = params;
 
-  // TODO: replace with your real data fetch
-  // const item = await fetchItem(id);
+  // TODO: real fetch here
+  // const item = await getItemById(id);
 
-  return NextResponse.json({ id }); // or: return new Response(JSON.stringify(item), { headers: { 'content-type': 'application/json' }});
+  return NextResponse.json({ id });
 }
-
 
